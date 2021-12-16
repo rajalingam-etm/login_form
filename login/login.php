@@ -1,7 +1,9 @@
 <?php
+error_reporting(~E_WARNING & ~E_NOTICE);
 $username = $_POST['username'];
 $password  = $_POST['password'];
-
+$dbuser = "";
+$dbpwd = "";
 $error=false;
 // $errormessage = array();
 $errmsg = "";
@@ -24,47 +26,50 @@ if($error){
         'message' => $errmsg
     );
 }else{
-
 $servername = "localhost";
-$username = "root";
-$password = "";
+$dbusername = "root";
+$dbpassword = "";
 $dbname = "project";
-
 // Create connection
-$conn = mysqli_connect($servername, $username, $password, $dbname);
+$conn = mysqli_connect($servername, $dbusername, $dbpassword, $dbname);
 // Check connection
 if (!$conn) {
   die("Connection failed: " . mysqli_connect_error());
 }
 if ($username == "" || $password == "" ){
-    echo "Error: " . $sql . "<br>" . mysqli_error($conn);
+  $data = array(
+    'status' => 'failed',
+    'message' => "Connection failed: " . mysqli_error($conn));
 }else{
-  $sql = "INSERT INTO `login` (`id`,`username`, `password`)
-VALUES (NULL,'$username', '$password')";
-}
-    
+ 
 
-if (mysqli_query($conn, $sql)) {
-  //echo "Thank you for the responce, We will contact you soon";
+$sql = "SELECT * FROM register WHERE user='".$username."' and password='".$password."'";
+// echo $sql;
+$result = mysqli_query($conn, $sql);
+// print_r($result);
+// exit;
+if (mysqli_num_rows($result) > 0) {
+  // output data of each row
+
+  $data = array(
+    'status' => 'success',
+    'message' => 'Login successfully');
+
+  // while($row = mysqli_fetch_assoc($result)) {
+  //   echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
+  // }
 } else {
-  echo "Error: " . $sql . "<br>" . mysqli_error($conn);
+    
+    $data = array(
+      'status' => 'failed',
+      'message' => "Invalid login credentials"); 
 }
 
 mysqli_close($conn); 
-$data = array(
-    'status' => 'success',
-    'message' => 'successfully inserted'
-);
+
+
 }
-//echo $data;
-
-
-
-
+}
 $result = json_encode(array("data" => $data));
-//$data["status"]='success';
-//$data["message"]='successfully inserted';
-//$result="{status: 'success'; message:'Successfully inserted'}";
-//$data = json_decode(file_get_contents('php://input'), true);
 echo $result;
-?> 
+?>

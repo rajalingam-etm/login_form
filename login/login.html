@@ -22,28 +22,26 @@
 
         <img src="user.png" class="user">
 
+
+        <div class="status" style="color:red; text-align: center;"></div>
+
         <h1>Login Here</h1>
-
-        <form name="myform" method="POST">
-
-            <p>Username</p>
-            <input type="text" name="username" placeholder="Enter Username " required="">
-
-            <p>Password</p>
-            <input type="password" name="password" placeholder="Enter Password" required="">
-            <input type="submit" name="" value="Login" onclick="loginData()">
-            <br><br>
-            <a href="register.html">Register for new account ?</a>
-        </form>
+        <!-- <form name="myform" action="" method="POST"> -->
+        <p>Username</p>
+        <input type="text" name="username" placeholder="Enter Username " required="">
+        <p>Password</p>
+        <input type="password" name="password" placeholder="Enter Password" required="">
+        <button type="submit" onclick="return loginData();" class="btn-primary">Login</button>
+        <br><br>
+        <a href="register.html">Register for new account ?</a>
+        <!-- </form> -->
     </div>
     <script>
         function loginData() {
-
             logData = {
                 'username': $('input[name=username]').val(),
                 'password': $('input[name=password]').val()
             };
-
             console.log(logData);
 
             $.ajax({
@@ -51,13 +49,15 @@
                 type: "POST",
                 data: logData,
 
+
                 success: function(data, textStatus, jqXHR) {
                     console.log(data);
+
                     var parsedData = JSON.parse(data);
                     var receivedData = parsedData.data;
                     if (receivedData.status == 'success') {
                         document.querySelector('.status').innerHTML = receivedData.message;
-                        //document.querySelector("input[type=text], textarea").value = "";
+                        window.location.href = "index.html";
                     } else {
                         document.querySelector('.status').innerHTML = receivedData.message;
                     }
@@ -65,15 +65,11 @@
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
                     console.log(jqXHR);
-
                     $('#status').text(jqXHR);
                 }
             });
-
-
         }
     </script>
 </body>
-
 
 </html>
