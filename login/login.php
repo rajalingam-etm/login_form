@@ -2,8 +2,8 @@
 error_reporting(~E_WARNING & ~E_NOTICE);
 $username = $_POST['username'];
 $password  = $_POST['password'];
-$dbuser = "";
-$dbpwd = "";
+// $dbuser = "";
+// $dbpwd = "";
 $error=false;
 // $errormessage = array();
 $errmsg = "";
@@ -43,7 +43,7 @@ if ($username == "" || $password == "" ){
 }else{
  
 
-$sql = "SELECT * FROM register WHERE user='".$username."' and password='".$password."'";
+$sql = "SELECT * FROM `register` WHERE user='".$username."' and password='".$password."'";
 // echo $sql;
 $result = mysqli_query($conn, $sql);
 // print_r($result);
